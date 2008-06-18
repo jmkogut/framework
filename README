@@ -1,0 +1,5 @@
+framework - A simple web application framework using wsgi, Paste, and WebOB
+
+framework is an attempt at writing a web frameowrk with the most flexability
+and ease of use. It's not necessarily an advertised solution, for I plan on
+keeping it to less than a thousand lines although we'll see how that works out.
