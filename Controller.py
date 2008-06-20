@@ -5,7 +5,7 @@ def controller(func):
     def replacement(environ, start_resonse):
         req = Request(environ)
         try:
-            resp = func(req, **req.urlvars):
+            resp = func(req, **req.urlvars)
         except exc.HTTPException, e:
             resp = e
         

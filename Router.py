@@ -1,26 +1,30 @@
-from Config import Routes
+from framework.Config import Routes
 
 import re
+import sys
 
 from webob import Request
 from webob import exc
 
-class Router():
+class Router:
 
     def __init__(self):
         self.routes = []
         self.add_routes()
 
-    def add_routes(self):
-        for route in Config.Routes.routes:
+    def add_route(self, route, controller):
+        if isinstance(controller, basestring):
+            controller = self.load(controller)
+        
+        route = '@%s@' % route.replace('@', '\\@')
+        self.routes.append((re.compile(route), controller))
 
-            controller = route[1]
-            if isinstance(controller, basestring)
-                controller = self.load(controller)
-            
-            self.routes.append((re.compile(route[0]), controller)
+    def add_routes(self):
+        for route in Routes.routes:
+            self.add_route(route[0], route[1])
 
     def load(self, controller):
+        #print controller.split(':', 1)
         mod, func = controller.split(':', 1)
 
         __import__(mod)
