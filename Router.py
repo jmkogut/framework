@@ -16,7 +16,7 @@ class Router:
         if isinstance(controller, basestring):
             controller = self.load(controller)
         
-        route = '@%s@' % route.replace('@', '\\@')
+        route = '%s' % route.replace('@', '\\@')
         self.routes.append((re.compile(route), controller))
 
     def add_routes(self):
@@ -36,7 +36,8 @@ class Router:
         req = Request(environ)
 
         for route, controller in self.routes:
-            if route.match(req.pattern_info):
+            #print route.match(req.path_info)
+            if route.match(req.path_info):
                 return controller(environ, start_response)
             
             return exc.HTTPNotFound()(environ, start_response)

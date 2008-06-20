@@ -2,7 +2,7 @@ from webob import Request, Response
 from webob import exc
 
 def controller(func):
-    def replacement(environ, start_resonse):
+    def replacement(environ, start_response):
         req = Request(environ)
         try:
             resp = func(req, **req.urlvars)
