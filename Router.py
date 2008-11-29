@@ -17,7 +17,7 @@ class Router:
             controller = self.load(controller)
         
         route = '%s' % route.replace('@', '\\@')
-        self.routes.append((re.compile(route), controller))
+        self.routes.append((route, controller))
 
     def add_routes(self):
         for route in Routes.routes:
@@ -34,10 +34,12 @@ class Router:
 
     def __call__(self, environ, start_response):
         req = Request(environ)
+        req.path_info = req.environ['REQUEST_URI'] # To work around lighttpd's failure to comply with WSGI
 
         for route, controller in self.routes:
-            #print route.match(req.path_info)
-            if route.match(req.path_info):
+            if re.match(route, req.path_info):
+                print "route matched %s to %s" % (req.path_info, route)
                 return controller(environ, start_response)
             
-            return exc.HTTPNotFound()(environ, start_response)
+        print "Out of %s routes, nothing found to match %s" % (len(self.routes), req.path_info)
+        return exc.HTTPNotFound()(environ, start_response)
