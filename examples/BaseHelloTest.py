@@ -30,6 +30,6 @@ if __name__ == '__main__':
 
     print 'Pretending to POST to form'
     req.method = 'POST'
-    req.body = 'name=JOSHuuuy!'
+    req.body = 'name=RAWR!'
     resp = req.get_response(hello_world)
     print resp

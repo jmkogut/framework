@@ -11,6 +11,6 @@ class _Hello:
                     <input type="submit"></form>'''
     
     def post(self):
-        return 'Hello %s! The resident dipshit!' % self.request.params['name']
+        return 'Hello %s! The resident jollywaggler!' % self.request.params['name']
 
 Hello = RestController(_Hello)
