@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" >
+
+  <soap:Body>
+    <{{method['name']}}Response xmlns="{{namespace}}">
+      <{{method['name']}}Result>{{method['response']}}</{{method['name']}}Result>
+    </{{method['name']}}Response>
+  </soap:Body>
+</soap:Envelope>
