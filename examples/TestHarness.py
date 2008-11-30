@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys
+import sys, os
 sys.path.append('../../')
 
 from framework.Router import Router
@@ -12,10 +12,11 @@ def presp(resp):
 	for line in resp.body.split("\n"):
 		print ' << %s' % line
 
-if __name__ == '__main__':
+testRouter = Router();
+testRouter.add_route('.*', SOAPHello)
 
-	testRouter = Router();
-	testRouter.add_route('.*', SOAPHello)
+''' For testing (no requests made)
+if __name__ == '__main__':
 
 	print "Initializing requests"
 	reqindex = Request.blank('/')
@@ -26,3 +27,13 @@ if __name__ == '__main__':
 
 	print "Printing response for /HelloTest"
 	presp(reqmethod.get_response(testRouter))
+'''
+
+''' For wsgi / lightthpd '''
+if __name__ == '__main__':
+	from fcgi import WSGIServer
+	
+	application = testRouter
+
+	os.setuid(33) # Set to www-data
+	WSGIServer(application, bindAddress="/tmp/fcgi-app.sock").run()

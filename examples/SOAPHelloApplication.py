@@ -1,4 +1,7 @@
 import re
+
+import tempita
+
 from framework.Controllers import SOAPController
 
 class SOAPApplication(object):
@@ -24,16 +27,27 @@ class SOAPApplication(object):
 			'arguments': [],
 			'returntype': 'string'
 		}
-
-		doc = self.__getattribute__(attr).__doc__
-		for line in doc.split("\n"):
-			if line.lstrip("\t").startswith('##'): doc = line.lstrip("\t#").split(", ")
-		print doc
+	
+		doc = None
+		for line in self.__getattribute__(attr).__doc__.split("\n"):
+			if line.lstrip("\t").startswith('##'):
+				doc = line.lstrip("\t#").split(", ")
+		
+		if doc:
+			mdata['returntype'] = doc[0].split(':')[1]
+			doc.remove(doc[0])
+		
+			if len(doc) > 0:
+				for arg in doc:
+					arg = arg.split(':')
+					mdata['arguments'].append({'name':arg[0], 'type':arg[1]})
+		else:
+			mdata['returntype'] = "string"
 
 		return mdata
 
-	def index(self):		
-		return ', '.join(["%s" % (i) for i in self.SOAPMethods]).rstrip(', ')
+	def index(self):
+		return tempita.Template.from_filename('SOAP.WSDL.tmpl').substitute(self.data)
 
 	def call(self):
 		method = self.request.path_info.lstrip('/').split('?')[0]
@@ -48,6 +62,8 @@ class SOAPApplication(object):
 
 def SOAPMethod(func):
 	func.__issoapmethod__ = True
+	
+	if (func.__doc__ == None): func.__doc__ = ""
 	return func
 
 
@@ -55,22 +71,19 @@ class SOAPHelloApplication(SOAPApplication):
 	
 	@SOAPMethod
 	def HelloTest(self):
-		'''
-		##HelloTest:string
-		'''
 		return "Hello, World!"
 
 	@SOAPMethod
 	def AddArguments(self, num1, num2):
 		'''
-		##AddArguments:string, num1:integer, num2:integer
+		##AddArguments:string, num1:long, num2:long
 		'''
 		return "The sum of %s and %s is %s" % (num1, num2, (num1 + num2))
 
 	@SOAPMethod
 	def DescribePerson(self, name, age, male):
 		'''
-		##DescribePerson:string, name:string, age:integer, male:boolean
+		##DescribePerson:string, name:string, age:int, male:boolean
 		'''
 		
 		if (male):

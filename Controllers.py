@@ -62,6 +62,7 @@ def SOAPController(SOAPMethods):
 
 		except exc.HTTPException, e:
 			resp = e
-
+		
+		resp.content_type = 'application/xml'
 		return resp(environ, start_response)
 	return replacement
