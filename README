@@ -5,5 +5,10 @@ and ease of use. It's not necessarily an advertised solution, for I plan on
 keeping it to less than a thousand lines although we'll see how that works out.
 
 -- Requirements
-flup
+tempita
 WebOb
+
+Under examples, you'll find TestHarness.py, which shows two different ways to use these apps,
+fcgi_handler.py works too.
+
+lighttpd.conf is an example lighttpd configuration.

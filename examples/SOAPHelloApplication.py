@@ -18,7 +18,11 @@ class SOAPApplication(object):
 				self.SOAPMethods.append(attr)
 				self.data['methods'].append( self.getData(attr) )
 
-		self.data['appname'] = self.__module__
+		if (self.request.path_info != ""):
+			self.data['appname'] = self.request.path_info.lstrip('/').split('/')[0]
+		else:
+			self.data['appname'] = self.__module__.split('.').pop()
+
 		self.data['namespace'] = self.request.host_url
 
 	def getData(self, attr):
@@ -50,8 +54,11 @@ class SOAPApplication(object):
 		return tempita.Template.from_filename('SOAP.WSDL.tmpl').substitute(self.data)
 
 	def call(self):
-		method = self.request.path_info.lstrip('/').split('?')[0]
-		return self.__getattribute__(method)()
+		try:
+			method = self.request.path_info.lstrip('/').split('?')[0]
+			return self.__getattribute__(method)()
+		except:
+			return "OOPS"
 
 	def issoapmethod(self, methodname):
 		try:
@@ -67,7 +74,7 @@ def SOAPMethod(func):
 	return func
 
 
-class SOAPHelloApplication(SOAPApplication):
+class HelloSOAP(SOAPApplication):
 	
 	@SOAPMethod
 	def HelloTest(self):
@@ -94,4 +101,4 @@ class SOAPHelloApplication(SOAPApplication):
 		return "%s, age %s, has a lot going for %s!" % \
 			(name, age, gpronoun)
 
-SOAPHello = SOAPController(SOAPHelloApplication)
+HelloSOAPTest = SOAPController(HelloSOAP)

@@ -4,7 +4,7 @@ import sys, os
 sys.path.append('../../')
 
 from framework.Router import Router
-from framework.examples.SOAPHelloApplication import SOAPHello
+from framework.examples.SOAPHelloApplication import HelloSOAPTest
 
 from webob import Request, Response
 
@@ -13,7 +13,7 @@ def presp(resp):
 		print ' << %s' % line
 
 testRouter = Router();
-testRouter.add_route('.*', SOAPHello)
+testRouter.add_route('/soap-hello.*', HelloSOAPTest)
 
 ''' For testing (no requests made)
 if __name__ == '__main__':

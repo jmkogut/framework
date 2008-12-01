@@ -62,7 +62,7 @@
 
 		{{for method in methods }}
 		<wsdl:operation name="{{method['name']}}">
-			<soap:operation soapAction="{{namespace}}/{{method['name']}}" style="document" />
+			<soap:operation soapAction="{{namespace}}/{{appname}}/{{method['name']}}" style="document" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
@@ -79,7 +79,7 @@
 
 		{{for method in methods }}
 		<wsdl:operation name="{{method['name']}}">
-			<soap12:operation soapAction="{{namespace}}/{{method['name']}}" style="document" />
+			<soap12:operation soapAction="{{namespace}}/{{appname}}/{{method['name']}}" style="document" />
 			<wsdl:input>
 				<soap12:body use="literal" />
 			</wsdl:input>
