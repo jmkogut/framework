@@ -1,4 +1,4 @@
-from framework.Applications import SOAPApplication
+from framework.Applications import SOAPApplication, SOAPMethod
 
 class HelloSOAP(SOAPApplication):
 	
