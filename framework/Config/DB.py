@@ -1,1 +1,1 @@
-ConnectionString = 'mysql://framework:framework@localhost/framework'
+ConnectionString = 'sqlite://framework.db'
