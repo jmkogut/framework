@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys, os
-sys.path.append('../../')
+sys.path.append('../')
 
 from framework.Router import Router
 from framework.examples.SOAPHelloApplication import HelloSOAPTest
