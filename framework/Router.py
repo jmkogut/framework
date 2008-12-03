@@ -1,3 +1,4 @@
+import framework
 from framework.Config import Routes
 
 import re
@@ -6,7 +7,7 @@ import sys
 from webob import Request
 from webob import exc
 
-class Router:
+class Router(framework.Base):
 	'''
 	Router takes (route, controller) pairs and simply executes controller when
 	it's called as a function.
@@ -29,7 +30,7 @@ class Router:
 		if isinstance(controller, basestring):
 			controller = self.load(controller)
 
-		self.routes.append((route, controller))
+		self.routes.append((re.compile(route), controller))
 
 	def load(self, controller):
 		'''
@@ -62,13 +63,21 @@ class Router:
 			request.path_info = request.environ['REQUEST_URI']
 
 		for route, controller in self.routes:
-			if re.match(route, request.path_info):
-				try:
+			match = route.match(request.path_info)
+
+			if (match):
+				self.debug('Route matched to %s' % request.path_info)
+				if (type(controller) == type):
+					self.debug('Controller was an Application.')
 					# Test to see if it's an Application (has a handle method)
-					return controller.handle(environ, start_response)
-				except AttributeError:
+					controller = controller(environ, start_response)
+					return controller.handle(match.groupdict())
+				else:
+					self.debug('Controller was a function.')
 					# Alternatively, fall back on the assumption that this is a function
 					return controller(environ, start_response)
+			else:
+				self.debug('No route matched to %s' % request.path_info)
 		
 		# If there is no route, 404
 		return exc.HTTPNotFound()(environ, start_response)
