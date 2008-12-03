@@ -1,5 +1,4 @@
 import framework
-from framework.Config import Routes
 
 import re
 import sys
