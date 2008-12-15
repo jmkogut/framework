@@ -54,8 +54,11 @@ class Router(framework.Base):
 		Returns:
 		framework.Response response -- The response from the controller
 		'''
-
+		
+		self.debug('\nNew Request ----------')
 		request = Request(environ)
+
+		self.debug('Remote addr: %s' % request.remote_addr)
 
 		# Try to find /some/ sort of request path
 		if (request.path_info == ""):

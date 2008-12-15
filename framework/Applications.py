@@ -18,7 +18,9 @@ class Application(framework.Base):
 	Template = None
 
 	# A dict to pass to tempita, the templating engine.
-	template_data = {}
+	template_data = {
+		'method':{}
+	}
 
 
 class SOAPApplication(Application):
@@ -94,24 +96,40 @@ class SOAPApplication(Application):
 
 		return method_data
 
-	def _call(self, method):
+	def _call(self):
 		'''
 		Calls a method (supplied by the request uri).
 		'''
 
 		try:
-			if method == '' or method == 'index':
+			
+			if 'HTTP_SOAPACTION' in self.request.environ:
+				self.debug('SOAP ACTION REQEST: %s' % self.request.environ['HTTP_SOAPACTION'])
+				#self.debug('SOAP REQUEST: %s' % self.request.body)
+			
+				method = self.request.environ['HTTP_SOAPACTION'].split('/').pop().rstrip('"')
+				self.debug('SOAP Method is %s' % method)
+			else:
+				method = ''
+
+
+			if method in [None, '', 'index']:
+				#arguments = self.parse_soap_request()
 				self.template_body = Templates.SOAP.WSDL
 			
 			else:
 				self.template_body = Templates.SOAP.Response
-				self.template_data['soap_response'] = self.__getattribute__(method)()
-
+				#self.debug(self.request)
+				#arguments = self.parse_soap_request()
+				arguments = {}
+				self.template_data['method']['response'] = self.__getattribute__(method)(**arguments)
+			
+			self.template_data['method']['name'] = method
 			return self.render()
 		except:
 			print "EXCEPTION"
 			print traceback.format_exc()
-	
+
 	def render(self):
 		'''
 		Renders the template data to the template
@@ -157,26 +175,21 @@ class SOAPApplication(Application):
 		'''
 
 		try:
-			if 'method' in match.keys():
-				self.debug('Calling SOAP Application method for dict: %s' % match)
-				response = self._call(match['method'])
-				self.debug('SOAP Response was %s' % (response), False)
-			
-				if isinstance(response, basestring):
-					self.debug('SOAP Application response was a string, building response from it')
-					response = Response(body=response)
-				else:
-					self.debug('SOAP Application response was a Response object')
 
+			response = self._call()
+			self.debug('SOAP Response was %s' % (response), False)
+		
+			if isinstance(response, basestring):
+				self.debug('SOAP Application response was a string, building response from it')
+				response = Response(body=response)
 			else:
-				self.debug('No named group "method" in %s' % match.keys())
-				raise exc.HTTPException
+				self.debug('SOAP Application response was a Response object')
 
 		except exc.HTTPException, e:
 			self.debug('SOAP Application threw HTTPException')
 			response = e
 		
-		response.content_type = 'application/xml'
+		response.content_type = 'text/xml'
 		return response(self.environ, self.start_response)
 
 

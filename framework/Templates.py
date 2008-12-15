@@ -1,7 +1,6 @@
 class SOAP:
 
-	WSDL = '''
-		<?xml version="1.0" encoding="utf-8"?>
+	WSDL = '''<?xml version="1.0" encoding="utf-8"?>
 		<wsdl:definitions
 			xmlns:s="http://www.w3.org/2001/XMLSchema"
 			xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
@@ -105,8 +104,7 @@ class SOAP:
 		</wsdl:definitions>
 	'''
 
-	Response = '''
-		<?xml version="1.0" encoding="utf-8"?>
+	Response = '''<?xml version="1.0" encoding="utf-8"?>
 		<soap:Envelope
 			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -118,4 +116,7 @@ class SOAP:
 			</{{method['name']}}Response>
 		  </soap:Body>
 		</soap:Envelope>
+	'''
+
+	WSDL_XSL = '''
 	'''
