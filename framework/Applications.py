@@ -36,9 +36,6 @@ class SOAPApplication(Application):
 		determines which methods should be made available to the
 		public, and sets up the local data store for the WSDL for
 		this application.
-
-		Arguments:
-		webob.Request request -- A webob Request object
 		'''
 		self.request =  Request(environ)
 		self.environ = environ
