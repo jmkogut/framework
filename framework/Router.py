@@ -77,7 +77,7 @@ class Router(framework.Base):
 				else:
 					self.debug('Controller was a function.')
 					# Alternatively, fall back on the assumption that this is a function
-					return controller(environ, start_response)
+					return controller(environ, start_response, **match.groupdict())
 			else:
 				self.debug('No route matched to %s' % request.path_info)
 		
