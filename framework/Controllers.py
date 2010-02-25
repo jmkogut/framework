@@ -1,6 +1,8 @@
 from webob import Request, Response
 from webob import exc
 
+import simplejson
+
 def Controller(func):
 	def replacement(environ, start_response):
 		req = Request(environ)
@@ -14,6 +16,24 @@ def Controller(func):
 
 		return resp(environ, start_response)
 	return replacement
+
+def JSONController(func):
+    """
+    Copy of @Controller that returns jsonified results
+    """
+	def replacement(environ, start_response):
+		req = Request(environ)
+		try:
+            resp = {'response': func(req, **req.urlvars)}
+		except exc.HTTPException, e:
+            resp = {'error': e}
+		
+		resp = Response(body=simplejson.dumps(resp))
+
+		return resp(environ, start_response)
+	return replacement
+
+
 
 def RestController(cls):
 	def replacement(environ, start_response):
