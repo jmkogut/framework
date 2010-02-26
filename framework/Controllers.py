@@ -25,12 +25,13 @@ def JSONController(func):
         req = Request(environ)
         try:
             resp = {'response': func(req, **kwargs)}
-        except exc.HTTPException, e:
+        except Exception, e:
             resp = {'error': e}
         
-        resp = Response(body=simplejson.dumps(resp))
+        resp = Response(body=simplejson.dumps(resp), content_type='text/plain')
 
         return resp(environ, start_response)
+    replacement.handlername = func.__name__
     return replacement
 
 
