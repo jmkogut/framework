@@ -15,11 +15,11 @@ def hello(req):
 def goodbye(req):
 	return "Goodbye!"
 
-hello_world = Router()
 routes = (
     ('^/gb', goodbye),
     ('.*', hello)
 )
 
+hello_world = Router()
 for (route,handler) in routes:
     hello_world.add_route(route, handler)
